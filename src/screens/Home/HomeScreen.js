@@ -1,10 +1,55 @@
-import React from 'react';
-import {View, Text} from 'react-native';
+import React, {useLayoutEffect, useContext} from 'react';
+import {FlatList, StyleSheet} from 'react-native';
 
-export function ProductsListScreen() {
+import {HeaderIconButton} from '../../components/HeaderIconButton';
+import {AuthContext} from '../../contexts/AuthContext';
+// import {Product} from '../components/Product';
+// import {useGet} from '../hooks/useGet';
+import {HeaderIconsContainer} from '../../components/HeaderIconsContainer';
+import {ThemeContext} from '../../contexts/ThemeContext';
+
+export function HomeScreen({navigation}) {
+  const {logout} = useContext(AuthContext);
+  const switchTheme = useContext(ThemeContext);
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <HeaderIconsContainer>
+          <HeaderIconButton
+            name={'color-palette'}
+            onPress={() => {
+              switchTheme();
+            }}
+          />
+          <HeaderIconButton
+            name={'log-out'}
+            onPress={() => {
+              logout();
+            }}
+          />
+        </HeaderIconsContainer>
+      ),
+    });
+  }, [navigation, logout, switchTheme]);
+  //   const products = useGet('/products');
+
+  //   function renderProduct({item: product}) {
+  //     return <Product product={product} />;
+  //   }
+
   return (
-    <View>
-      <Text>Home view</Text>
-    </View>
+    <FlatList
+      contentContainerStyle={styles.productsListContainer}
+      //   data={products}
+      //   renderItem={renderProduct}
+      //   keyExtractor={(product) => `${product.id}`}
+    />
   );
 }
+
+const styles = StyleSheet.create({
+  productsListContainer: {
+    paddingVertical: 8,
+    marginHorizontal: 8,
+  },
+});
