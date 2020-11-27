@@ -1,4 +1,5 @@
 import React, {useState, useCallback, useContext} from 'react';
+import {StatusBar} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
@@ -37,6 +38,7 @@ export default function () {
 
   return (
     <ThemeContext.Provider value={switchTheme}>
+      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
       <NavigationContainer theme={isDarkMode ? darkTheme : lightTheme}>
         <RootStack.Navigator
           screenOptions={{
