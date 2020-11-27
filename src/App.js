@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useCallback, useContext} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
@@ -7,9 +7,18 @@ import {MainStackNavigator} from './navigators/MainStackNavigator';
 
 import {SplashScreen} from './screens/Splash/SplashScreen';
 
+import {lightTheme} from './themes/lightTheme';
+import {darkTheme} from './themes/darkTheme';
+import {ThemeContext} from './contexts/ThemeContext';
+
 const RootStack = createStackNavigator();
 
 export default function () {
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const switchTheme = useCallback(() => {
+    setIsDarkMode(!isDarkMode);
+  }, [isDarkMode]);
+
   const state = {
     loading: false,
     user: true,
@@ -27,14 +36,16 @@ export default function () {
   }
 
   return (
-    <NavigationContainer>
-      <RootStack.Navigator
-        screenOptions={{
-          headerShown: false,
-          animationEnabled: false,
-        }}>
-        {renderScreens()}
-      </RootStack.Navigator>
-    </NavigationContainer>
+    <ThemeContext.Provider value={switchTheme}>
+      <NavigationContainer theme={isDarkMode ? darkTheme : lightTheme}>
+        <RootStack.Navigator
+          screenOptions={{
+            headerShown: false,
+            animationEnabled: false,
+          }}>
+          {renderScreens()}
+        </RootStack.Navigator>
+      </NavigationContainer>
+    </ThemeContext.Provider>
   );
 }
